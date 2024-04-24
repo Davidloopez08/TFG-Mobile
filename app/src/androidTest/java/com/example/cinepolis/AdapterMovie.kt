@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinepolis.databinding.ItemMovieBinding
 import android.content.Context
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class AdapterMovie(private val movie: List<Movie>, private val listener: OnClickListener) :RecyclerView.Adapter<AdapterMovie.ViewHolder>(){
 
@@ -25,15 +27,18 @@ class AdapterMovie(private val movie: List<Movie>, private val listener: OnClick
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = movie.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movie = movie.get(position)
-        with(holder){
+        with(holder) {
             Glide.with(context)
-                .
+                .load(movie.photo)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .into(binding.ivMovie)
+            setListener(movie)
         }
     }
+
 }
