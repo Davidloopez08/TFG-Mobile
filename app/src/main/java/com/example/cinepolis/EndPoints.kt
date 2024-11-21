@@ -1,12 +1,13 @@
 package com.example.cinepolis
 
+import Movie
 import retrofit2.Response
 import retrofit2.http.GET
 
 interface EndPoints {
 
-    @GET("/FranEspino/demo/db")
-    suspend fun getDataMovies(): Response<MovieResponse>
+    @GET("/peliculas")
+    suspend fun getDataMovies(): Response<List<Movie>>
 
 
 }

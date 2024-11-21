@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id ("kotlin-kapt")
+    id("kotlin-kapt")
 }
 
 android {
@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.cinepolis"
-        minSdk = 24
-        targetSdk = 33
+        minSdk = 21
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -43,22 +43,28 @@ android {
 }
 
 dependencies {
+    implementation("androidx.core:core-ktx:1.13.1") // Versión estable y actual
+    implementation("androidx.appcompat:appcompat:1.7.0") // Versión estable
+    implementation("com.google.android.material:material:1.12.0") // Versión estable
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4") // Versión estable
+    testImplementation("junit:junit:4.13.2") // Versión estable para pruebas unitarias
+    androidTestImplementation("androidx.test.ext:junit:1.1.5") // Actualización de junit para pruebas de Android
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1") // Actualización de Espresso para pruebas
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    //Libreria Glide
-    implementation("com.github.bumptech.glide:glide:4.11.0")
-    kapt("com.github.bumptech.glide:compiler:4.11.0")
-    //Libreria Retrofit and OkHttp3
-    implementation("com.squareup.okhttp3:okhttp:4.6.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.6.0")
-    //implementation("com.squareup.retrofit2:retrofit.2.6.1")
-    implementation("com.squareup.retrofit2:converter-gson:2.6.1")
-    //Exployer
-    //implementation("com.google.android.exployer:exployer:2.18.1")
+    // Librería Glide (añadir kapt si usas anotaciones)
+    implementation("com.github.bumptech.glide:glide:4.14.2")
+    kapt("com.github.bumptech.glide:compiler:4.14.2") // Versión de compilador correspondiente
+
+    // Librerías Retrofit y OkHttp3
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") // Versión estable
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Versión estable
+    implementation("com.squareup.okhttp3:okhttp:4.11.0") // Versión estable
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0") // Mismo versionado que okhttp
+
+    // Exoplayer
+    implementation("com.google.android.exoplayer:exoplayer:2.19.1") // Versión estable
+
+    // YouTube Android Player (puedes elegir usar la dependencia de JAR)
+    //implementation(files("libs/youtube-android-player-api.jar")) // Incluye el archivo JAR en la carpeta libs
 }
+
