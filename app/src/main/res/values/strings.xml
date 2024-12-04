@@ -5,14 +5,16 @@
     <string name="button_info">Información</string>
     <string name="button_play">Reproducir</string>
     <string name="categoria1">Ficcion</string>
-    <string name="categoria2">\u2022 Suspenso</string>
-    <string name="categoria3">\u2022 Misterio</string>
-    <string name="categoria4">\u2022 Adrenalina</string>
+    <string name="categoria2">\u2022 Acción</string>
+    <string name="categoria3">\u2022 Terror y Misterio</string>
+    <string name="categoria4">\u2022 Fantasía</string>
     <string name="title1">Series</string>
     <string name="title2">Películas</string>
     <string name="title3">Categorías</string>
-    <string name="categorie1">De Misterio</string>
+    <string name="Estrenos2022">\u2022 Estrenos 2022</string>
     <string name="title_rv_premiere">Estrenos 2022</string>
     <string name="title_rv_horror">Terror y misterio</string>
+    <string name="title_Fantasia">Fantasía</string>
+    <string name="title_accion">Acción</string>
 
 </resources>
