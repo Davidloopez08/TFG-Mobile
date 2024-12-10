@@ -36,14 +36,14 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     @SuppressLint("InlinedApi")
     fun enableFullscreenWithButtons() {
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN) // Mantiene la barra de navegación visible
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
     private fun setupRecyclerView() {
         adapterPremiere = AdapterMovie(emptyList(), this)
         adapterHorror = AdapterMovie(emptyList(), this)
-        adapterAction = AdapterMovie(emptyList(), this) // Adaptador para la categoría Acción
-        adapterFantasy = AdapterMovie(emptyList(), this) // Adaptador para la categoría Fantasía
+        adapterAction = AdapterMovie(emptyList(), this)
+        adapterFantasy = AdapterMovie(emptyList(), this)
 
         binding.rvPremiere.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPremiere.adapter = adapterPremiere
@@ -68,14 +68,14 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                         // Filtrar las películas por cada categoría
                         val premiereMovies = movies.filter { it.category == "estreno" }
                         val horrorMovies = movies.filter { it.category == "horror" }
-                        val actionMovies = movies.filter { it.category == "accion" } // Nuevas películas de Acción
-                        val fantasyMovies = movies.filter { it.category == "fantasia" } // Nuevas películas de Fantasía
+                        val actionMovies = movies.filter { it.category == "accion" }
+                        val fantasyMovies = movies.filter { it.category == "fantasia" }
 
                         // Actualizar los adaptadores con las películas filtradas
                         adapterPremiere.updateData(premiereMovies)
                         adapterHorror.updateData(horrorMovies)
-                        adapterAction.updateData(actionMovies) // Actualizar el adaptador de Acción
-                        adapterFantasy.updateData(fantasyMovies) // Actualizar el adaptador de Fantasía
+                        adapterAction.updateData(actionMovies)
+                        adapterFantasy.updateData(fantasyMovies)
                     } ?: run {
                         Toast.makeText(this@MainActivity, "No data available", Toast.LENGTH_SHORT).show()
                     }
