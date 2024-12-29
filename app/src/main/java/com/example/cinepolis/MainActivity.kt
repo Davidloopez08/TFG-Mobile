@@ -1,10 +1,10 @@
 package com.example.cinepolis
 
+import Connection
 import Movie
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.bson.Document
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
@@ -28,7 +29,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupRecyclerView()
-        fetchData()
+
+        // Llamar a la función que trae los datos de MongoDB
+        fetchDataFromMongoDB()
 
         enableFullscreenWithButtons()
     }
@@ -51,42 +54,62 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.rvHorror.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvHorror.adapter = adapterHorror
 
-        binding.rvFantasia.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)  // Cambié rvFantasy por rvFantasia
-        binding.rvFantasia.adapter = adapterFantasy // Cambié rvFantasy por rvFantasia
+        binding.rvFantasia.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvFantasia.adapter = adapterFantasy
 
-        binding.rvAccion.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)  // Cambié rvAction por rvAccion
-        binding.rvAccion.adapter = adapterAction // Cambié rvAction por rvAccion
+        binding.rvAccion.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvAccion.adapter = adapterAction
     }
 
-    private fun fetchData() {
-        val call = Connection.responseEngine().create(EndPoints::class.java)
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = call.getDataMovies()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    response.body()?.let { movies ->
-                        // Filtrar las películas por cada categoría
-                        val premiereMovies = movies.filter { it.category == "estreno" }
-                        val horrorMovies = movies.filter { it.category == "horror" }
-                        val actionMovies = movies.filter { it.category == "accion" }
-                        val fantasyMovies = movies.filter { it.category == "fantasia" }
+    private fun fetchDataFromMongoDB() {
+        val collection = Connection().getPeliculasCollection()
 
-                        // Actualizar los adaptadores con las películas filtradas
-                        adapterPremiere.updateData(premiereMovies)
-                        adapterHorror.updateData(horrorMovies)
-                        adapterAction.updateData(actionMovies)
-                        adapterFantasy.updateData(fantasyMovies)
-                    } ?: run {
-                        Toast.makeText(this@MainActivity, "No data available", Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val movies = collection.find().flatMap { document ->
+                    // Acceder al array "peliculas"
+                    val peliculasArray = document.getList("peliculas", Document::class.java)
+
+                    // Mapeo de los datos a objetos Movie
+                    peliculasArray.map { pelicula ->
+                        Movie(
+                            id = pelicula.getInteger("id"),
+                            title = pelicula.getString("title"),
+                            year = pelicula.getInteger("year"),
+                            description = pelicula.getString("description"),
+                            photo = pelicula.getString("photo"),
+                            url = pelicula.getString("url"),
+                            category = pelicula.getString("category")
+                        )
                     }
-                } else {
-                    Toast.makeText(this@MainActivity, "Failed to fetch data", Toast.LENGTH_SHORT).show()
+                }.toList()
+
+                // Debug: Imprimir películas obtenidas
+                println("Películas obtenidas: $movies")
+
+                withContext(Dispatchers.Main) {
+                    // Filtrar por categorías
+                    val premiereMovies = movies.filter { it.category == "estreno" }
+                    val horrorMovies = movies.filter { it.category == "horror" }
+                    val actionMovies = movies.filter { it.category == "accion" }
+                    val fantasyMovies = movies.filter { it.category == "fantasia" }
+
+                    // Actualizar adaptadores
+                    adapterPremiere.updateData(premiereMovies)
+                    adapterHorror.updateData(horrorMovies)
+                    adapterAction.updateData(actionMovies)
+                    adapterFantasy.updateData(fantasyMovies)
                 }
+            } catch (e: Exception) {
+                println("Error al obtener datos: ${e.message}")
             }
         }
     }
 
+
+
     override fun OnClick(movie: Movie) {
+        // Manejar el clic en una película (esto ya lo tienes)
         val intent = Intent(this, PlayMovieActivity::class.java).apply {
             putExtra("url", movie.url)
         }
